@@ -341,6 +341,10 @@ static const UIEdgeInsets NYTPhotosViewControllerCloseButtonImageInsets = {3, 0,
     [self.notificationCenter postNotificationName:NYTPhotoViewControllerPhotoImageUpdatedNotification object:photo];
 }
 
+- (void)updateProgressForPhoto:(id <NYTPhoto>)photo {
+    [self.notificationCenter postNotificationName:NYTPhotoViewControllerPhotoProgressUpdatedNotification object:photo];
+}
+
 #pragma mark - Gesture Recognizers
 
 - (void)didSingleTapWithGestureRecognizer:(UITapGestureRecognizer *)tapGestureRecognizer {

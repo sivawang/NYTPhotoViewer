@@ -133,6 +133,13 @@ extern NSString * const NYTPhotosViewControllerDidDismissNotification;
  */
 - (void)updateImageForPhoto:(id <NYTPhoto> _Nullable)photo;
 
+/**
+ *  Update the progress displayed for the given photo object.
+ *
+ *  @param photo The photo for which to display the new progress.
+ */
+- (void)updateProgressForPhoto:(id <NYTPhoto> _Nullable)photo;
+
 @end
 
 /**

@@ -22,6 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSString * const NYTPhotoViewControllerPhotoImageUpdatedNotification;
 
 /**
+ *  `NYTPhotoViewController` observes this notification. It expects an `id <NYTPhoto>` object as the object of the notification.
+ */
+extern NSString * const NYTPhotoViewControllerPhotoProgressUpdatedNotification;
+
+/**
  *  The view controller controlling the display of a single photo object.
  */
 @interface NYTPhotoViewController : UIViewController <NYTPhotoContainer>

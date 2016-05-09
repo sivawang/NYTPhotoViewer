@@ -14,7 +14,10 @@
 #import <FLAnimatedImage/FLAnimatedImage.h>
 #endif
 
+#import <DACircularProgress/DACircularProgressView.h>
+
 NSString * const NYTPhotoViewControllerPhotoImageUpdatedNotification = @"NYTPhotoViewControllerPhotoImageUpdatedNotification";
+NSString * const NYTPhotoViewControllerPhotoProgressUpdatedNotification = @"NYTPhotoViewControllerPhotoProgressUpdatedNotification";
 
 @interface NYTPhotoViewController () <UIScrollViewDelegate>
 
@@ -27,6 +30,7 @@ NSString * const NYTPhotoViewControllerPhotoImageUpdatedNotification = @"NYTPhot
 @property (nonatomic) NSNotificationCenter *notificationCenter;
 @property (nonatomic) UITapGestureRecognizer *doubleTapGestureRecognizer;
 @property (nonatomic) UILongPressGestureRecognizer *longPressGestureRecognizer;
+@property (nonatomic) DACircularProgressView *progressView;
 
 @end
 
@@ -60,6 +64,7 @@ NSString * const NYTPhotoViewControllerPhotoImageUpdatedNotification = @"NYTPhot
     [super viewDidLoad];
     
     [self.notificationCenter addObserver:self selector:@selector(photoImageUpdatedWithNotification:) name:NYTPhotoViewControllerPhotoImageUpdatedNotification object:nil];
+    [self.notificationCenter addObserver:self selector:@selector(photoProgressUpdatedWithNotification:) name:NYTPhotoViewControllerPhotoProgressUpdatedNotification object:nil];
     
     self.scalingImageView.frame = self.view.bounds;
     [self.view addSubview:self.scalingImageView];
@@ -102,7 +107,7 @@ NSString * const NYTPhotoViewControllerPhotoImageUpdatedNotification = @"NYTPhot
         UIImage *photoImage = photo.image ?: photo.placeholderImage;
         _scalingImageView = [[NYTScalingImageView alloc] initWithImage:photoImage frame:CGRectZero];
         
-        if (!photoImage) {
+        if (!photo.image) {
             [self setupLoadingView:loadingView];
         }
     }
@@ -117,9 +122,20 @@ NSString * const NYTPhotoViewControllerPhotoImageUpdatedNotification = @"NYTPhot
 - (void)setupLoadingView:(UIView *)loadingView {
     self.loadingView = loadingView;
     if (!loadingView) {
-        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        [activityIndicator startAnimating];
-        self.loadingView = activityIndicator;
+//        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//        [activityIndicator startAnimating];
+//        self.loadingView = activityIndicator;
+        
+        // Special logic for photo uploading progress.
+        if (self.progressView == nil) {
+            CGRect rect = CGRectMake(0, 0, 88, 88);
+            self.progressView = [[DACircularProgressView alloc] initWithFrame:rect];
+            self.progressView.backgroundColor = [UIColor clearColor];
+            self.progressView.progressTintColor = [UIColor whiteColor];
+            self.progressView.progress = self.photo.progress;
+        }
+        
+        self.loadingView = self.progressView;
     }
 }
 
@@ -128,6 +144,17 @@ NSString * const NYTPhotoViewControllerPhotoImageUpdatedNotification = @"NYTPhot
     if ([photo conformsToProtocol:@protocol(NYTPhoto)] && [photo isEqual:self.photo]) {
         [self updateImage:photo.image imageData:photo.imageData];
     }
+}
+
+- (void)photoProgressUpdatedWithNotification:(NSNotification *)notification {
+    id <NYTPhoto> photo = notification.object;
+    if ([photo conformsToProtocol:@protocol(NYTPhoto)] && [photo isEqual:self.photo]) {
+        [self updateProgress:photo.progress];
+    }
+}
+
+- (void)updateProgress:(CGFloat)progress {
+    NSLog(@"progress=%@", @(progress));
 }
 
 - (void)updateImage:(UIImage *)image imageData:(NSData *)imageData {
