@@ -53,6 +53,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly, nullable) NSAttributedString *attributedCaptionCredit;
 
+/**
+ *  An download progress value.
+ */
+@property (nonatomic, assign) CGFloat progress;
+
 @end
 
 NS_ASSUME_NONNULL_END

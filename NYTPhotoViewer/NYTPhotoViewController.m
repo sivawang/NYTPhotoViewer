@@ -119,6 +119,18 @@ NSString * const NYTPhotoViewControllerPhotoProgressUpdatedNotification = @"NYTP
     [self setupGestureRecognizers];
 }
 
+- (DACircularProgressView *)progressView {
+    if (_progressView == nil) {
+        CGRect rect = CGRectMake(0, 0, 54, 54);
+        _progressView = [[DACircularProgressView alloc] initWithFrame:rect];
+        _progressView.backgroundColor = [UIColor clearColor];
+        _progressView.progressTintColor = [UIColor whiteColor];
+        _progressView.progress = 0.66;
+    }
+    
+    return _progressView;
+}
+
 - (void)setupLoadingView:(UIView *)loadingView {
     self.loadingView = loadingView;
     if (!loadingView) {
@@ -127,13 +139,8 @@ NSString * const NYTPhotoViewControllerPhotoProgressUpdatedNotification = @"NYTP
 //        self.loadingView = activityIndicator;
         
         // Special logic for photo uploading progress.
-        if (self.progressView == nil) {
-            CGRect rect = CGRectMake(0, 0, 88, 88);
-            self.progressView = [[DACircularProgressView alloc] initWithFrame:rect];
-            self.progressView.backgroundColor = [UIColor clearColor];
-            self.progressView.progressTintColor = [UIColor whiteColor];
-            self.progressView.progress = self.photo.progress;
-        }
+        [self.progressView setIndeterminate:1];
+        [self updateProgress:self.photo.progress];
         
         self.loadingView = self.progressView;
     }
@@ -154,7 +161,22 @@ NSString * const NYTPhotoViewControllerPhotoProgressUpdatedNotification = @"NYTP
 }
 
 - (void)updateProgress:(CGFloat)progress {
-    NSLog(@"progress=%@", @(progress));
+    if (progress < 0) {
+        [self.progressView setIndeterminate:0];
+        
+        //#bc204b
+        UIColor *color = [UIColor colorWithRed:0xbc/255.0 green:0x20/255.0 blue:0x4b/255.0 alpha:1.0];
+        [self.progressView setIndeterminate:0];
+        [self.progressView setProgress:0.33];
+        [self.progressView setProgressTintColor:color];
+    } else {
+        if (progress > 0) {
+            [self.progressView setIndeterminate:0];
+        }
+        [self.progressView setProgress:progress];
+    }
+    
+    [self.photo setProgress:progress];
 }
 
 - (void)updateImage:(UIImage *)image imageData:(NSData *)imageData {
