@@ -138,9 +138,11 @@ NSString * const NYTPhotoViewControllerPhotoProgressUpdatedNotification = @"NYTP
 //        [activityIndicator startAnimating];
 //        self.loadingView = activityIndicator;
         
-        // Special logic for photo uploading progress.
+        // Special logic for photo download progress.
         [self.progressView setIndeterminate:1];
-        [self updateProgress:self.photo.progress];
+        if (self.photo.progress != 0) {
+            [self updateProgress:self.photo.progress];
+        }
         
         self.loadingView = self.progressView;
     }
