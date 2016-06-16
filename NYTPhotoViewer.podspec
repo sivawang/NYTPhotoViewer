@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
     ss.ios.resource_bundle = { s.name => ['NYTPhotoViewer/NYTPhotoViewer.bundle/*'] }
     ss.source_files = 'NYTPhotoViewer/**/*.{h,m,swift}'
     ss.frameworks = 'UIKit', 'Foundation'
-    ss.dependency 'DACircularProgress', :git => 'https://github.com/sivawang/DACircularProgress.git'
+    ss.dependency 'DACircularProgress'
   end
 
   s.subspec 'AnimatedGifSupport' do |ss|
