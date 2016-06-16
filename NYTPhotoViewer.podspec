@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.homepage         = "https://github.com/NYTimes/NYTPhotoViewer"
   s.author           = "The New York Times"
   s.license          = { :type => 'Apache 2.0' }
-  s.source           = { :git => "https://github.com/NYTimes/NYTPhotoViewer.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/sivawang/NYTPhotoViewer.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
